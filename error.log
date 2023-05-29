@@ -1,0 +1,36 @@
+----------
+
+Mon May 29 2023 10:10:42 GMT+0200 (Central European Summer Time)
+
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: is subject to change. To configure the initial branch name to use in all
+hint: of your new repositories, which will suppress this warning, call:
+hint: 
+hint: 	git config --global init.defaultBranch <name>
+hint: 
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint: 
+hint: 	git branch -m <name>
+
+
+----------
+
+Mon May 29 2023 10:10:43 GMT+0200 (Central European Summer Time)
+
+To https://github.com/Kiog-Aser/personal.git
+ ! [rejected]        main -> main (fetch first)
+error: failed to push some refs to 'https://github.com/Kiog-Aser/personal.git'
+
+
+----------
+
+Mon May 29 2023 10:10:43 GMT+0200 (Central European Summer Time)
+
+hint: Updates were rejected because the remote contains work that you do
+hint: not have locally. This is usually caused by another repository pushing
+hint: to the same ref. You may want to first integrate the remote changes
+hint: (e.g., 'git pull ...') before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+
+
