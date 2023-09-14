@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="./assets/css/line-awesome.min.css">
     <link rel="stylesheet" href="./assets/css/style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.11/typed.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-J7TDDXCEML"></script>
 <script>
@@ -257,13 +258,13 @@
         </section> -->
         <!-- //REVIEWS -->
 
-     <!-- BLOG -->
+<!-- BLOG -->
 <section id="blog" class="full-height px-lg-5">
     <div class="container">
         <div class="row pb-4" data-aos="fade-up">
             <div class="col-lg-8">
                 <h6 class="text-brand">BLOG</h6>
-                <h1>Some of my latest blog posts:</h1>
+                <h1>Some of my blog posts:</h1>
             </div>
         </div>
         <div class="row gy-4" id="blog-posts">
@@ -274,59 +275,38 @@
 <!-- //BLOG -->
 
 <script>
-    // Function to fetch and display the latest 3 blog posts
-    async function fetchLatestBlogPosts() {
-        try {
-            const response = await fetch('https://blog.milh.tech/feed/feed.xml');
-            const xmlText = await response.text();
-            const parser = new DOMParser();
-            const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
-            const entries = xmlDoc.querySelectorAll('entry');
+    // Function to fetch and display the latest 3 blog posts using jQuery
+    $(document).ready(function () {
+        $.get('https://blog.milh.tech/feed/feed.xml', function (data) {
+            const $xml = $(data);
 
-            // Sort the entries by publication date in descending order (latest first)
-            const sortedEntries = Array.from(entries).sort((a, b) => {
-                const dateA = new Date(a.querySelector('updated').textContent);
-                const dateB = new Date(b.querySelector('updated').textContent);
-                return dateB - dateA;
-            });
-
-            // Take the latest 3 entries
-            const latestEntries = sortedEntries.slice(0, 3);
-
-            // Clear existing blog post cards
-            const blogPostsContainer = document.getElementById('blog-posts');
-            blogPostsContainer.innerHTML = '';
-
-            // Loop through the latest 3 entries and create blog post cards
-            latestEntries.forEach(entry => {
-                const title = entry.querySelector('title').textContent;
-                const link = entry.querySelector('link').getAttribute('href');
-                const pubDate = new Date(entry.querySelector('updated').textContent).toLocaleDateString();
+            // Find and process each <item> in the RSS feed
+            $xml.find('item').slice(0, 3).each(function () {
+                const $item = $(this);
+                const title = $item.find('title').text();
+                const link = $item.find('link').text();
+                const pubDate = new Date($item.find('pubDate').text()).toLocaleDateString();
 
                 // Create a new blog post card
-                const blogPostCard = document.createElement('div');
-                blogPostCard.classList.add('col-md-4');
-                blogPostCard.innerHTML = `
-                    <div class="card-custom rounded-4 bg-base shadow-effect">
-                        <div class="card-custom-content p-4">
-                            <p class="text-brand mb-2">${pubDate}</p>
-                            <h5 class="mb-4">${title}</h5>
-                            <a href="${link}" target="_blank" class="link-custom">Read More</a>
+                const blogPostCard = `
+                    <div class="col-md-4">
+                        <div class="card-custom rounded-4 bg-base shadow-effect">
+                            <div class="card-custom-content p-4">
+                                <p class="text-brand mb-2">${pubDate}</p>
+                                <h5 class="mb-4">${title}</h5>
+                                <a href="${link}" target="_blank" class="link-custom">Read More</a>
+                            </div>
                         </div>
                     </div>
                 `;
 
                 // Append the card to the blog posts container
-                blogPostsContainer.appendChild(blogPostCard);
+                $('#blog-posts').append(blogPostCard);
             });
-        } catch (error) {
-            console.error('Error fetching and displaying blog posts:', error);
-        }
-    }
-
-    // Fetch and display the latest 3 blog posts when the page loads
-    window.addEventListener('load', fetchLatestBlogPosts);
+        });
+    });
 </script>
+
 
 
         <!-- CONTACT -->
