@@ -274,38 +274,30 @@
 </section>
 <!-- //BLOG -->
 
-<script>
-    // Function to fetch and display the latest 3 blog posts using jQuery
-    $(document).ready(function () {
-        $.get('https://blog.milh.tech/feed/feed.xml', function (data) {
-            const $xml = $(data);
+// JavaScript code to fetch and display latest blog posts
+document.addEventListener("DOMContentLoaded", function () {
+  const postList = document.getElementById("post-list");
 
-            // Find and process each <item> in the RSS feed
-            $xml.find('item').slice(0, 3).each(function () {
-                const $item = $(this);
-                const title = $item.find('title').text();
-                const link = $item.find('link').text();
-                const pubDate = new Date($item.find('pubDate').text()).toLocaleDateString();
-
-                // Create a new blog post card
-                const blogPostCard = `
-                    <div class="col-md-4">
-                        <div class="card-custom rounded-4 bg-base shadow-effect">
-                            <div class="card-custom-content p-4">
-                                <p class="text-brand mb-2">${pubDate}</p>
-                                <h5 class="mb-4">${title}</h5>
-                                <a href="${link}" target="_blank" class="link-custom">Read More</a>
-                            </div>
-                        </div>
-                    </div>
-                `;
-
-                // Append the card to the blog posts container
-                $('#blog-posts').append(blogPostCard);
-            });
-        });
+  // Fetch the latest blog posts from your API or RSS feed
+  fetch("https://blog.milh.tech/feed/feed.xml")
+    .then((response) => response.json())
+    .then((data) => {
+      // Display the latest 3 blog posts
+      data.slice(0, 3).forEach((post) => {
+        const postItem = document.createElement("li");
+        postItem.innerHTML = `
+          <h3>${post.title}</h3>
+          <p>${post.excerpt}</p>
+          <a href="${post.link}">Read more</a>
+        `;
+        postList.appendChild(postItem);
+      });
+    })
+    .catch((error) => {
+      console.error("Error fetching blog posts:", error);
     });
-</script>
+});
+
 
 
 
