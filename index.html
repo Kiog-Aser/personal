@@ -257,60 +257,77 @@
         </section> -->
         <!-- //REVIEWS -->
 
-        <!-- BLOG -->
-        <section id="blog" class="full-height px-lg-5">
-            <div class="container">
-
-                <div class="row pb-4" data-aos="fade-up">
-                    <div class="col-lg-8">
-                        <h6 class="text-brand">BLOG</h6>
-                        <h1>Some of my blog posts:</h1>
-                    </div>
-                </div>
-
-                <div class="row gy-4">
-                  <div class="col-md-4" data-aos="fade-up" data-aos-delay="600">
-                      <div class="card-custom rounded-4 bg-base shadow-effect">
-                          <div class="card-custom-image rounded-4">
-                              <img class="rounded-4" src="https://cdn.sanity.io/images/eai4xcql/production/e028627b3957d20d01b92ccf58a5cc3bc8793f12-474x298.jpg" alt="">
-                          </div>
-                          <div class="card-custom-content p-4">
-                              <p class="text-brand mb-2">30 April, 2023</p>
-                              <h5 class="mb-4">Why you need healthy habits and routines! (Atomic Habits)</h5>
-                              <a href="https://blog.milh.tech/posts/habits/" target="_blank" class="link-custom">Read More</a>
-                          </div>
-                      </div>
-                  </div>
-                    <div class="col-md-4" data-aos="fade-up">
-                        <div class="card-custom rounded-4 bg-base shadow-effect">
-                            <div class="card-custom-image rounded-4">
-                                <img class="rounded-4" src="https://cdn.sanity.io/images/eai4xcql/production/f58de1add1845cae0b8ccd1bd398b85d40931a26-474x231.jpg" alt="">
-                            </div>
-                            <div class="card-custom-content p-4">
-                                <p class="text-brand mb-2">26 April, 2023</p>
-                                <h5 class="mb-4">Language Transfer: "The thinking method"</h5>
-                                <a href="https://blog.milh.tech/posts/languagetransfer/" target="_blank" class="link-custom">Read More</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
-                        <div class="card-custom rounded-4 bg-base shadow-effect">
-                            <div class="card-custom-image rounded-4">
-                                <img class="rounded-4" src="https://cdn.sanity.io/images/eai4xcql/production/dc76f448e316e889b7b33aec326433ec0525fcd0-607x340.webp" alt="">
-                            </div>
-                            <div class="card-custom-content p-4">
-                                <p class="text-brand mb-2">22 April, 2023</p>
-                                <h5 class="mb-4">The Oxygen Advantage</h5>
-                                <a href="https://blog.milh.tech/posts/oxygenadvantage/" target="_blank" class="link-custom">Read More</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+     <!-- BLOG -->
+<section id="blog" class="full-height px-lg-5">
+    <div class="container">
+        <div class="row pb-4" data-aos="fade-up">
+            <div class="col-lg-8">
+                <h6 class="text-brand">BLOG</h6>
+                <h1>Some of my latest blog posts:</h1>
             </div>
-        </section>
-        <!-- //BLOG -->
+        </div>
+        <div class="row gy-4" id="blog-posts">
+            <!-- Latest 3 blog posts will be dynamically added here -->
+        </div>
+    </div>
+</section>
+<!-- //BLOG -->
+
+<script>
+    // Function to fetch and display the latest 3 blog posts
+    async function fetchLatestBlogPosts() {
+        try {
+            const response = await fetch('https://blog.milh.tech/feed/feed.xml');
+            const xmlText = await response.text();
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+            const items = xmlDoc.querySelectorAll('item');
+
+            // Sort the items by publication date in descending order (latest first)
+            const sortedItems = Array.from(items).sort((a, b) => {
+                const dateA = new Date(a.querySelector('pubDate').textContent);
+                const dateB = new Date(b.querySelector('pubDate').textContent);
+                return dateB - dateA;
+            });
+
+            // Take the latest 3 items
+            const latestItems = sortedItems.slice(0, 3);
+
+            // Clear existing blog post cards
+            const blogPostsContainer = document.getElementById('blog-posts');
+            blogPostsContainer.innerHTML = '';
+
+            // Loop through the latest 3 RSS feed items and create blog post cards
+            latestItems.forEach(item => {
+                const title = item.querySelector('title').textContent;
+                const link = item.querySelector('link').textContent;
+                const pubDate = new Date(item.querySelector('pubDate').textContent).toLocaleDateString();
+
+                // Create a new blog post card
+                const blogPostCard = document.createElement('div');
+                blogPostCard.classList.add('col-md-4');
+                blogPostCard.innerHTML = `
+                    <div class="card-custom rounded-4 bg-base shadow-effect">
+                        <div class="card-custom-content p-4">
+                            <p class="text-brand mb-2">${pubDate}</p>
+                            <h5 class="mb-4">${title}</h5>
+                            <a href="${link}" target="_blank" class="link-custom">Read More</a>
+                        </div>
+                    </div>
+                `;
+
+                // Append the card to the blog posts container
+                blogPostsContainer.appendChild(blogPostCard);
+            });
+        } catch (error) {
+            console.error('Error fetching and displaying blog posts:', error);
+        }
+    }
+
+    // Fetch and display the latest 3 blog posts when the page loads
+    window.addEventListener('load', fetchLatestBlogPosts);
+</script>
+
 
         <!-- CONTACT -->
 <section id="contact" class="full-height px-lg-5">
