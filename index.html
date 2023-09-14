@@ -281,27 +281,27 @@
             const xmlText = await response.text();
             const parser = new DOMParser();
             const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
-            const items = xmlDoc.querySelectorAll('item');
+            const entries = xmlDoc.querySelectorAll('entry');
 
-            // Sort the items by publication date in descending order (latest first)
-            const sortedItems = Array.from(items).sort((a, b) => {
-                const dateA = new Date(a.querySelector('pubDate').textContent);
-                const dateB = new Date(b.querySelector('pubDate').textContent);
+            // Sort the entries by publication date in descending order (latest first)
+            const sortedEntries = Array.from(entries).sort((a, b) => {
+                const dateA = new Date(a.querySelector('updated').textContent);
+                const dateB = new Date(b.querySelector('updated').textContent);
                 return dateB - dateA;
             });
 
-            // Take the latest 3 items
-            const latestItems = sortedItems.slice(0, 3);
+            // Take the latest 3 entries
+            const latestEntries = sortedEntries.slice(0, 3);
 
             // Clear existing blog post cards
             const blogPostsContainer = document.getElementById('blog-posts');
             blogPostsContainer.innerHTML = '';
 
-            // Loop through the latest 3 RSS feed items and create blog post cards
-            latestItems.forEach(item => {
-                const title = item.querySelector('title').textContent;
-                const link = item.querySelector('link').textContent;
-                const pubDate = new Date(item.querySelector('pubDate').textContent).toLocaleDateString();
+            // Loop through the latest 3 entries and create blog post cards
+            latestEntries.forEach(entry => {
+                const title = entry.querySelector('title').textContent;
+                const link = entry.querySelector('link').getAttribute('href');
+                const pubDate = new Date(entry.querySelector('updated').textContent).toLocaleDateString();
 
                 // Create a new blog post card
                 const blogPostCard = document.createElement('div');
